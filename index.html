@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Testimoni</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .testimonial-card {
+            background-color: #E0F1EA;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+        }
+        .testimonial-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Generator Testimoni</h1>
+        <form id="testimonialForm">
+            <div id="testimonialInputs">
+                <div class="form-group">
+                    <label for="userName">Nama Pengguna:</label>
+                    <input type="text" class="form-control" name="userName[]" placeholder="Masukkan Nama Pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label for="userComment">Komentar:</label>
+                    <textarea class="form-control" name="userComment[]" placeholder="Masukkan Komentar" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="starRating">Rating Bintang (1-5):</label>
+                    <input type="number" class="form-control" name="starRating[]" min="1" max="5" placeholder="Masukkan Rating" required>
+                </div>
+                <div class="form-group">
+                    <label for="userImageUrl">URL Gambar:</label>
+                    <input type="text" class="form-control" name="userImageUrl[]" placeholder="Masukkan URL Gambar" required>
+                </div>
+                <div class="form-group">
+                    <label for="productUrl">URL Produk:</label>
+                    <input type="text" class="form-control" name="productUrl[]" placeholder="Masukkan URL Produk" required>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTestimonialInput()">Tambah Testimoni</button>
+            <button type="button" class="btn btn-success" onclick="generateTestimonialHTML()">Generate HTML</button>
+        </form>
+        <pre id="output" class="mt-4" style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;"></pre>
+    </div>
+
+    <script>
+        function addTestimonialInput() {
+            const testimonialInputs = document.getElementById('testimonialInputs');
+            const newInput = document.createElement('div');
+            newInput.innerHTML = `
+                <div class="form-group">
+                    <label for="userName">Nama Pengguna:</label>
+                    <input type="text" class="form-control" name="userName[]" placeholder="Masukkan Nama Pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label for="userComment">Komentar:</label>
+                    <textarea class="form-control" name="userComment[]" placeholder="Masukkan Komentar" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="starRating">Rating Bintang (1-5):</label>
+                    <input type="number" class="form-control" name="starRating[]" min="1" max="5" placeholder="Masukkan Rating" required>
+                </div>
+                <div class="form-group">
+                    <label for="userImageUrl">URL Gambar:</label>
+                    <input type="text" class="form-control" name="userImageUrl[]" placeholder="Masukkan URL Gambar" required>
+                </div>
+                <div class="form-group">
+                    <label for="productUrl">URL Produk:</label>
+                    <input type="text" class="form-control" name="productUrl[]" placeholder="Masukkan URL Produk" required>
+                </div>
+            `;
+            testimonialInputs.appendChild(newInput);
+        }
+
+        function generateStarRating(rating) {
+            let stars = '';
+            for (let i = 0; i < Math.floor(rating); i++) {
+                stars += `<svg style="width: 20px; height: 20px; fill: gold;">
+                    <use xlink:href="/static/v2/images/sprite/icon-sprite.svg#icon-star"></use>
+                </svg>`;
+            }
+            if (rating % 1 !== 0) {
+                stars += `<svg style="width: 20px; height: 20px; fill: gold;">
+                    <use xlink:href="/static/v2/images/sprite/icon-sprite.svg#icon-star-half"></use>
+                </svg>`;
+            }
+            return stars;
+        }
+
+        function generateTestimonialHTML() {
+            const form = document.getElementById('testimonialForm');
+            const formData = new FormData(form);
+            const userNames = formData.getAll('userName[]');
+            const userComments = formData.getAll('userComment[]');
+            const starRatings = formData.getAll('starRating[]');
+            const userImageUrls = formData.getAll('userImageUrl[]');
+            const productUrls = formData.getAll('productUrl[]');
+
+            let html = `<div style="overflow-x: auto; padding: 20px; display: flex; gap: 10px; scroll-behavior: smooth;">\n`;
+
+            for (let i = 0; i < userNames.length; i++) {
+                const stars = generateStarRating(starRatings[i]);
+
+                html += `    <article style="flex: 0 0 auto; background-color: #E0F1EA; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 15px; width: 250px; text-align: center;">\n`;
+                html += `        <a href="${productUrls[i]}" style="display: block;">\n`;  // Link to product page
+                html += `            <img src="${userImageUrls[i]}" alt="Gambar Testimoni" style="width: 100%; height: auto; border-radius: 8px;">\n`;
+                html += `        </a>\n`;
+                html += `        <div style="margin-top: 10px;">\n`;
+                html += `            <div style="display: flex; justify-content: center; gap: 2px;">\n`;
+                html += stars;
+                html += `            </div>\n`;
+                html += `            <h3 style="margin: 10px 0 0; font-size: 16px;">${userNames[i]}</h3>\n`;
+                html += `            <p style="font-size: 14px; line-height: 1.5;">${userComments[i]}</p>\n`;
+                html += `        </div>\n`;
+                html += `    </article>\n`;
+            }
+
+            html += `</div>`;
+
+            // Salin hasil ke clipboard
+            navigator.clipboard.writeText(html).then(() => {
+                alert('HTML telah disalin ke clipboard!');
+            }, (err) => {
+                console.error('Gagal menyalin: ', err);
+            });
+
+            document.getElementById('output').textContent = html;
+        }
+    </script>
+</body>
+</html>
