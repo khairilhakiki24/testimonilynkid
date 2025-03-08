@@ -113,7 +113,14 @@
 
                 html += `    <article style="flex: 0 0 auto; background-color: #E0F1EA; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 15px; width: 250px; text-align: center;">\n`;
                 html += `        <a href="${productUrls[i]}" style="display: block;">\n`;  // Link to product page
-                html += `            <img src="${userImageUrls[i]}" alt="Gambar Testimoni" style="width: 100%; height: auto; border-radius: 8px;">\n`;
+                html += `            <img \n`;
+                html += `                loading="eager" \n`;
+                html += `                class="W(100%) H(a) Bdrs(8px) Ov(h)" \n`;
+                html += `                height="auto" \n`;
+                html += `                width="100%" \n`;
+                html += `                src="${userImageUrls[i]}" \n`;
+                html += `                alt="Gambar Testimoni" \n`;
+                html += `                style="border-radius: 8px; object-fit: cover;">\n`;
                 html += `        </a>\n`;
                 html += `        <div style="margin-top: 10px;">\n`;
                 html += `            <div style="display: flex; justify-content: center; gap: 2px;">\n`;
